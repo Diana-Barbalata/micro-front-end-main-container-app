@@ -1,8 +1,14 @@
-import {useState} from 'react'
-import './App.css'
-import TaskForm from "./components/TaskForm.tsx";
+import {lazy, Suspense, useState} from 'react';
 import {Task} from "./types.ts";
-import TaskList from "./components/TaskList.tsx";
+
+const TaskList = lazy(() =>
+    // @ts-expect-error known issue with module resolution
+    import('taskListApp/TaskList')
+);
+const TaskForm = lazy(() =>
+    // @ts-expect-error known issue with module resolution
+    import('taskFormApp/TaskForm')
+);
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -21,17 +27,22 @@ function App() {
         setTasks(tasks.filter(task => task.id !== id));
     };
 
-  return (
-      <div>
-          <h1>Task Management (Monolith)</h1>
-          <TaskForm onAddTask={addTask} />
-          <TaskList
-              tasks={tasks}
-              onToggleComplete={toggleComplete}
-              onDeleteTask={deleteTask}
-          />
-      </div>
-  )
+    return (
+        <div>
+            <h1>Task Management (Container)</h1>
+            <Suspense fallback={<div>Loading Task Form...</div>}>
+                <TaskForm onAddTask={addTask} containerId="task-form-container" />
+            </Suspense>
+            <Suspense fallback={<div>Loading Task List...</div>}>
+                <TaskList
+                    tasks={tasks}
+                    onToggleComplete={toggleComplete}
+                    onDeleteTask={deleteTask}
+                    containerId="task-list-container"
+                />
+            </Suspense>
+        </div>
+    );
 }
 
-export default App
+export default App;

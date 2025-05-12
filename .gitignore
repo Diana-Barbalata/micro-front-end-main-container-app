@@ -49,3 +49,5 @@ coverage/
 # Temporary files
 *.tmp
 *.swp
+
+.__mf__temp/**/*

@@ -29,7 +29,7 @@ function App() {
 
     return (
         <div>
-            <h1>Task Management (Container)</h1>
+            <h1>Listă de cumpărături (Micro front-end)</h1>
             <Suspense fallback={<div>Loading Task Form...</div>}>
                 <TaskForm onAddTask={addTask} containerId="task-form-container" />
             </Suspense>
